@@ -13,15 +13,15 @@ This is how I set up a LEMP-Stack on a virtual machine for sandboxed projects. T
 - git
 - composer
 
-Once the environment was successfully set up, the `bootstrap.sql` will be processed against mysql so thats a handy place to put a database dump in. Anyway, since this is optional you simply can remove this file if you do not need it.
+Once the environment was successfully set up, the `bootstrap.sql` placed in `provisioning/resources` will be processed against mysql so thats a handy place to put a database dump in. Anyway, since this is optional you simply can remove this file if you do not need it.
 
 # Setup
 
-## customize the bootstrapping (optional)
-You can customize the bootstrap configuration in `box-settings/config.sh` if the defaults do not match your requirements:
+## customize the bootstrapping for provisioner shell (optional)
+You can customize the bootstrap configuration in `provisioning/provisioner/shell/config.sh` if the defaults do not match your requirements:
 
 assign the root directory of your server:
-> document_root="/vagrant/app/public"
+> document_root="/home/vagrant/code/app/public"
 
 set the database user:
 > db_username="root"

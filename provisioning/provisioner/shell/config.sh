@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # assign the root directory of your server
-document_root="/vagrant/app/public"
+document_root="/home/vagrant/code/app/public"
 # set the database user
 db_username="root"
 # set the database pass

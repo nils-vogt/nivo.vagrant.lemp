@@ -1,14 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+provisioner='shell' # shell|puppet
+
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
-  #config.vm.provision :shell, path: "provisioning/shell/bootstrap.sh", keep_color: true
-  config.vm.provision :puppet, manifests_path: "provisioning/puppet/environments/development/manifests", module_path: "provisioning/puppet/modules"
+
+  case provisioner
+    when 'shell'
+        config.vm.provision :shell, path: "../provisioning/provisioner/shell/bootstrap.sh", keep_color: true
+    when 'puppet'
+      config.vm.provision :puppet,
+        manifests_path: "../provisioning/provisioner/puppet/environments/development/manifests",
+        module_path: "../provisioning/provisioner/puppet/modules"
+    end
+
   config.vm.network "forwarded_port", guest: 80,    host: 8082
   config.vm.network "forwarded_port", guest: 3306,  host: 33306
   config.vm.network "private_network", ip: "111.111.11.11"
-  config.vm.synced_folder './', '/home/vagrant/code', nfs: true
+  config.vm.synced_folder './../', '/home/vagrant/code', nfs: true
   config.vm.provider "virtualbox" do |v|
     v.gui = false
     v.customize ["modifyvm", :id, "--memory", "1024"]
@@ -16,10 +26,7 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
-  config.vm.provision "puppet" do |puppet|
-    puppet.facter = {
-      'fqdn'             => "foo",
-    }
-    puppet.manifests_path = "provisioning/puppet/environments/development/manifests"
-  end
 end
+
+# in case the provisioning stops at "default: SSH auth method: private key"
+# export SSH_AUTH_SOCK="" && vagrant halt && vagrant up

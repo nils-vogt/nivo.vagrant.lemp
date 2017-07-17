@@ -39,16 +39,42 @@ service { 'nginx':
 # link shipped nginx-config
 file { '/etc/nginx/sites-available/default':
   ensure  => 'link', # present|absent|file|directory|link.
-  target  => '/home/vagrant/code/provisioning/shell/nginx.default', # symlink target
+  target  => '/home/vagrant/code/provisioning/resources/nginx.default', # symlink target
   require => Package['nginx'],
   # If Puppet makes changes to this resource, it will cause all of the notified resources to refresh. (Refresh behavior varies by resource type: services will restart, mounts will unmount and re-mount, etc. Not all types can refresh.)
   notify  => Service['nginx'],
 }
 
-# prepare the public root
-file { '/usr/share/nginx/html':
-  ensure  => 'link',
-  target  => '/vagrant/app/public',
+# create the app directory
+file { 'application directory':
+  path => '/home/vagrant/code/app',
+  ensure  => 'directory',
   require => Package['nginx'],
   force => true,
 }
+
+# prepare the document root
+file { 'document root directory':
+  path => '/home/vagrant/code/app/public',
+  ensure  => 'directory',
+  require => File['application directory'],
+  force => true,
+}
+
+# create the index.php
+file { 'document root index':
+  path => '/home/vagrant/code/app/public/index.php',
+  ensure  => 'file',
+  require => File['document root directory'],
+  content => '<?php phpinfo(); ?>',
+  force => true,
+}
+
+# link the document root
+file { '/usr/share/nginx/html':
+  ensure  => 'link',
+  target  => '/home/vagrant/code/app/public',
+  require => [Package['nginx'], File['document root index']],
+  force => true,
+}
+
