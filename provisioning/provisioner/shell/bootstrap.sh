@@ -60,14 +60,15 @@ fi
 # install php7 stack
 #
 echoSection "> installing php7 stack..."
-apt-get install -y --force-yes php7.0-fpm php7.0 php7.0-mysql php7.0-curl php7.0-gd php7.0-intl php-pear php7.0-imap php7.0-mcrypt php7.0-sqlite3 php7.0-mbstring php7.0-bcmath snmp >/dev/null
+apt-get install -y --force-yes php7.1-fpm php7.1 php7.1-mysql php7.1-curl php7.1-gd php7.1-intl php-pear php7.1-imap php7.1-mcrypt php7.1-sqlite3 php7.1-mbstring php7.1-bcmath snmp >/dev/null
 
 # install xdebug
 #
 echoSection "> installing xdebug..."
-apt-get install -y php7.0-dev >/dev/null
+apt-get install -y php7.1-dev >/dev/null
 pecl install xdebug >/dev/null
-bash -c "cat /home/vagrant/code/provisioning/resources/xdebug-php.ini >> /etc/php/7.0/fpm/php.ini"
+bash -c "cat /home/vagrant/code/provisioning/resources/xdebug-php.ini >> /etc/php/7.1/fpm/php.ini"
+bash -c "cat /home/vagrant/code/provisioning/resources/xdebug-php.ini >> /etc/php/7.1/cli/php.ini"
 
 # install mysql-server (without prompt)
 #
